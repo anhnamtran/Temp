@@ -23,6 +23,7 @@ Additions to cost models:
       available in the spec.
     - Maintenance cost then applies the mutators on to the expression it was
       given and compute their differences.
+    - If the mutator doesn't change the expression, then the expression is free.
     - The size of the difference is then the maintenance cost.
 3. Unprioritized order:
     - This method is specific to the (b) iteration of maintenance cost. It is
@@ -109,4 +110,17 @@ Improvementts, drawbacks, and solutions:
     - The solution for the second problem leads to the second iteration of
       maintenance cost. 
 3. Maintenance cost - unprioritized order: 
-
+    - To tackle the multi-objective optimization problem that the summing
+      maintenance cost had, unprioritized order was added. 
+    - This allowed the cost model to compare maintenance costs of mutators to
+      each other, and coming to a collective conclusion on whether or not an
+      expression is better or worse than another. 
+    - Because of this addition, we were also able to better integrate with the
+      original cost model's prioritized order, making the cost model more
+      consistent. 
+    - This changed allowed the cost model to also provide the correct solution
+      to Thing spec. 
+    - HOWEVER, the addition of maintenance has made the cost model substantially
+      slower. This is due to it requiring more calls to the Z3Solver than the
+      original model, with a call being necessary for every mutator that
+      exists, as well as the query itself.
