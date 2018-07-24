@@ -123,4 +123,14 @@ Improvementts, drawbacks, and solutions:
     - HOWEVER, the addition of maintenance has made the cost model substantially
       slower. This is due to it requiring more calls to the Z3Solver than the
       original model, with a call being necessary for every mutator that
-      exists, as well as the query itself.
+      exists, as well as the query itself. This, in turn, has made Cozy slower
+      to find solutions that the original model can. 
+    - Furthermore, Cozy is now pickier on deciding which solution is better, is
+      returning more ambiguity from comparing expressions. An example would be
+      conditional calculation: 
+        - The original cost model will say that storing the condition as a state
+          is better than recalculating the condition every time. 
+        - The maintenance cost model will say that there is no clear difference
+          and they are ambiguous.
+4. Frequency cost:
+    - 
