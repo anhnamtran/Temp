@@ -15,6 +15,7 @@ one of which is having integer arithmetic stored as a state variable. Once this
 heuristic is removed, Cozy will start producing unwanted state variables.
 Specifically, when provided with this specification and no heuristic:
 
+\begin{center}
 \begin{lstlisting}
     Incrementer:
         state x : Int
@@ -23,6 +24,7 @@ Specifically, when provided with this specification and no heuristic:
         op increment()
             x = x + 1;
 \end{lstlisting}
+\end{center}
 
 Cozy will continuously store each increment of \code{x} as state variables. As
 Cozy runs for longer and longer, the stored states will go from \code{(x + 1)},
