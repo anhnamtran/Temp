@@ -133,4 +133,46 @@ Improvementts, drawbacks, and solutions:
         - The maintenance cost model will say that there is no clear difference
           and they are ambiguous.
 4. Frequency cost:
-    - 
+    - With maintenance cost being in a reasonable state, the frequency of usage
+      for queries and mutators were put into consideration. 
+    - The goal is to allow users to specify how often a query or a mutator will
+      be used when writing a spec, thus influencing what Cozy will optimize for
+      when doing synthesis.
+    - The spec used to show how this cost model works is: 
+            Product:
+                state xs : Bag<Int>
+                state ys : Bag<Int>
+
+            ----frequency = 1--------
+                query product()
+                    [(x, y) | x <- xs, y <- ys]
+
+            ----frequency = 10000----
+                op add_x(x : Int)
+                    xs.add(x);
+    - The incorrect implementation that Cozy will try to produce for this spec
+      will be to store the list of ALL (x, y) tuples as a state. This, of
+      course, will be very bad if if an x was added, because then the list will
+      have to be updated to include another length of the list ys.
+        - In the original cost model as well as the maintenance cost model, there
+          is a heuristic that prevents this spec from coming up with this
+          solution.
+    - The by utilizing the maintenance cost, Cozy will not produce the incorrect
+      implementation. However, the frequency cost allows the user to specify how
+      often the op or query will be used. 
+        - In the example, the op has higher frequency than the query, which
+          makes it so Cozy will optimize in terms of the op, thus not outputting
+          the list of tuples. 
+        - If the frequency were switched, and the query had a significantly
+          higher frequency than the op, Cozy will then optimize for the query,
+          in which case the list of tuple will be the better implementation. 
+    - There are a few drawbacks that can be observed from this model: 
+        1. Since it uses part of the maintenance cost model, it is still slower
+        than the original cost modle. 
+        2. Since this is stil a multi-objective optimization problem,
+        calculating the frequency cost by weighted sum might incur several
+        confusing behaviors in the long run, especially for more complicated
+        specs.
+        3. Numbers for the frequency is currently still VERY ambiguous. This
+        means that there is no fixed scale for the frequencies that could be
+        provided in a spec.
