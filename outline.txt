@@ -39,7 +39,7 @@ Additions to cost models:
       default being 1.
     - Subqueries created during synthesis inherit the frequency of their parent.
 
-Improvementts and drawbacks: 
+Improvementts, drawbacks, and solutions: 
 1. Freebies: 
     - The addition of freebies fixed a bug that had to do with having
       arithmetic in state variables. 
@@ -66,4 +66,47 @@ Improvementts and drawbacks:
         - Specifically, we choose states that are maintained by a specific
           query. This makes it so that a state is only free for subqueries of a
           a query, and no others. 
-2. 
+2. Maintenance cost - summation: 
+    - The addition of maintenance cost was meant to tackle a problem where Cozy is
+      unable to "see" outside of its respective query. This means that it did
+      not consider any of the mutators available to it. 
+    - Maintenance cost is an effort toward a direction in which Cozy does
+      consider its mutators when optimizing queries. 
+    - The spec in question: 
+            Spec:
+                state things: Set<Thing>
+
+                query countSharedColor(t : Thing)
+                    assume t in things;
+                    len [x | x <- things, x.color == t.color]
+
+                op addThing(t : Thing)
+                    things.add(t);
+    - With this spec, Cozy will optimize the query such that it will store a
+      map of Things mapped things with the same color. This implementation is
+      good in just the scope of the query, but when the mutator is called, and
+      an extra thing is added, not only will all the Things with the same color
+      have to be updated, but the new added Thing will have to be updated as
+      well, which is very inefficient when the amount of things grows very
+      large. 
+    - The hypothesis was that if we let Cozy consider the cost of maintaining a
+      state using a mutator, it will choose a better solution. 
+        - Specifically, the solution would then be to store a map from colors to
+          all the Things with that color. This way when the amount of things
+          grow to very large, the implmentation will still be efficient.
+    - There are few drawbacks: 
+        1. Instead of straight up saying that the second implementation is
+        better, Cozy decides that they are ambiguous in terms of each other.
+        This is mainly because now that Cozy is considering the mutator, it is
+        able to find examples where the maintenance cost gives different results
+        depending on the items inside of the original set. The examples,
+        however, are of smaller sets, which might be the reason why it's
+        failing.
+        2. For cases where there is more than one mutator, for each expression,
+        there's a chance that it has different mainteance cost depending on the
+        mutator that was given to it. This can lead to very confusing results,
+        as we're only summing things up.
+    - The solution for the second problem leads to the second iteration of
+      maintenance cost. 
+3. Maintenance cost - unprioritized order: 
+
