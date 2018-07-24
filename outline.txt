@@ -1,6 +1,6 @@
 We want to talk about what we've learned.
 
-So far we've had 4 different cost models:
+So far we've had 3 different cost models, with one having two minor iterations:
 1. The original cost model that is a prioritized ordering of the asymptotic
 runtime, the max storage size, the true runtime, and the true size.
 2. The maintenance cost model. It considers the cost of maintaining a state
@@ -38,3 +38,22 @@ Additions to cost models:
     - This adds an extra parameter to both Op() and Query() throughout Cozy. The
       default being 1.
     - Subqueries created during synthesis inherit the frequency of their parent.
+
+Improvementts and drawbacks: 
+1. Freebies: 
+    - The addition of freebies fixed a bug that had to do with having
+      arithmetic in state variables. 
+    - The spec in question: 
+            Incrementer:
+                state x : Int
+                query get()
+                    x
+                op increment()
+                    x = x + 1;
+    - Before freebies, Cozy had a heuristic rule that prevents it from storing
+      (x + 1) as a state variable. Without that heuristic, Cozy views storing
+      the incremented version of x as better than just storing x, this lead to
+      Cozy storing every increment of x as a state variable. 
+    - Adding Freebies allowed Cozy to see that it can use x for free, which
+      let Cozy display the correct state variable behavior. 
+2. 
