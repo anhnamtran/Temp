@@ -56,4 +56,14 @@ Improvementts and drawbacks:
       Cozy storing every increment of x as a state variable. 
     - Adding Freebies allowed Cozy to see that it can use x for free, which
       let Cozy display the correct state variable behavior. 
+    - The drawback comes from how to provide the freebies to Cozy. If we just
+      used the Hints that are available for query generation, a problem
+      arises: 
+        - Cozy might change its mind on a state, in which case if it was
+          previously marked free, it will remain free, even when Cozy has
+          desided to discard it. 
+    - To counteract that effect, we only choose specific things to be freebies. 
+        - Specifically, we choose states that are maintained by a specific
+          query. This makes it so that a state is only free for subqueries of a
+          a query, and no others. 
 2. 
