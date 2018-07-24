@@ -1,0 +1,40 @@
+We want to talk about what we've learned.
+
+So far we've had 4 different cost models:
+1. The original cost model that is a prioritized ordering of the asymptotic
+runtime, the max storage size, the true runtime, and the true size.
+2. The maintenance cost model. It considers the cost of maintaining a state
+variable when `op`s are ran. It has gone through two iterations:
+    a. The sum of all maintenance costs for all ops.
+    b. An unprioritized ordering of the maintenance costs, the runtime, and the
+    max storage.
+3. The frequency cost model that adds an extra parameter to queries and mutators
+that allows the user to specify the frequency of those ops. This allows the cost
+model to know which thing it should prioritize in optimizing.
+
+Additions to cost models:
+1. Freebies:
+    - These are variables that the cost models are allowed to use for free, we
+      added these as an extension to the original cost model, now it exists for
+      all of them.
+2. Maintenance cost:
+    - This is specific to the maintenance cost model. With its addition, the
+      cost model was also given information about various mutators that are
+      available in the spec.
+    - Maintenance cost then applies the mutators on to the expression it was
+      given and compute their differences.
+    - The size of the difference is then the maintenance cost.
+3. Unprioritized order:
+    - This method is specific to the (b) iteration of maintenance cost. It is
+      the oposite of prioritized order (previously known as composite order) in
+      that it combines several orders when it is unclear which is more
+      important.
+    - It is a slightly better approach to multi-objective optimization than just
+      summing (as done in iteration (a) of maintenance cost).
+4. Frequency cost:
+    - This method is specific to the frequency cost model. It is a weighted sum
+      of the runtime and the maintenance cost of expressions. The weights being
+      the frequency of each of those.
+    - This adds an extra parameter to both Op() and Query() throughout Cozy. The
+      default being 1.
+    - Subqueries created during synthesis inherit the frequency of their parent.
