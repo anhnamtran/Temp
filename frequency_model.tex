@@ -1,6 +1,14 @@
 \newcommand{\code}[1]{\texttt{#1}}
 
 \subsection{Overview}
+The frequency cost model uses the foundations of the maintenance cost model, but
+replaces the unprioritized ordering with a prioritized ordering of frequency
+cost, asymptotic runtime, max storage, true runtime, and true size. 
+
+This model approaches optimization in a way that lets the user specify which
+query or mutator is more important than the other, and calculates the costs of
+expressions accordingly so that Cozy will find the implementation that is better
+tailored to what the user thinks the specification will be used.
 
 \subsection{Improvements}
 
