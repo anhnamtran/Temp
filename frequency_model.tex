@@ -38,5 +38,26 @@ query or mutator is more important than the other, and calculates the costs of
 expressions accordingly so that Cozy will find the implementation that is better
 tailored to how the user thinks the specification will be used.
 
-\subsection{Challenge}
+The frequency cost of an expression is the weighted sum of its true runtime and
+its maintenance cost for every mutator that is available. The true runtime is
+considered to be the runtime of the query. The weights is the frequency of the
+query and mutators.
 
+\subsection{Challenge}
+There are a few noticeable challenges with this model. The first is, since this
+model is still trying to optimize multiple objectives, there might be an issue
+with just taking the weighted sum of runtime and maintenance costs. This could
+possibly produce confusing results in the future, especially for more
+complicated specifications.
+
+Moreover, since the model is using parts of the maintenance cost model, it is
+still slower than the original cost model. However, since it makes less solver
+calls, it is slightly faster than the maintenance cost model.
+
+The most important issue to tackle is the scale of the frequencies. Currently,
+there are no specific guidelines for how to use the frequencies, or what numbers
+the frequencies should be. Manual testing on the example above shows that if the
+query has a frequency that is at least $\times 25$ the frequency of the mutator,
+Cozy will produce a different implementation. However, it is unclear if the
+scale is the same for other specifications, especially those that more
+complicated.
