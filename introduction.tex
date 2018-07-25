@@ -3,8 +3,10 @@ expressions given to it. It then makes several calls to a solver to determine
 the order between the costs, that is, which one is better.
 
 There are currently three versions of the cost model: the original cost model,
-the maintenance cost model, and most recently, the frequency cost model.  The
-original cost model refers to the cost model that Cozy currently uses for
+the maintenance cost model (both of which are on the main branch of repository),
+and most recently, the frequency cost model (on the query-importance branch).
+The original cost model refers to the cost model that Cozy currently uses for
 running benchmarks. The latter two are modifications of the original model.
 Based on several experiments, the maintenance and frequency models are slightly
-worse than the original model, but introduces more fine-grained optimization. 
+worse than the original model, but introduces more fine-grained optimization and
+solutions to different problems.
