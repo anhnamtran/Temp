@@ -1,13 +1,5 @@
 \newcommand{\code}[1]{\texttt{#1}}
 
-\subsection{Overview}
-With the original cost model, there were no connections between queries and
-mutators. This means that when it is optimizing a query, it is doing so
-regardless how that would affect the performance of the mutators.
-The maintenance cost model is provided with information on what mutators (or
-\code{op}s) that exists in the specification. It will then calculate the cost to
-maintain expressions when there are mutator to be considered.
-
 \subsection{The Problem}
 With the original cost model, there is a chance Cozy will output implementaions
 in which a state variable is highly efficient when a query is ran on it, but
@@ -36,6 +28,19 @@ color. When the number of cats is very large, it can lead to inefficiency.
 By allowing the cost model to also consider the maintenance cost of expressions
 with respect to available mutators, Cozy should be able determine that storing
 a map from colors to cats with the same colors is much more efficient overall.
+
+\subsection{Overview}
+With the original cost model, there were no connections between queries and
+mutators. This means that when it is optimizing a query, it is doing so
+regardless how that would affect the performance of the mutators.
+The maintenance cost model is provided with information on what mutators (or
+\code{op}s) that exists in the specification. It will then calculate the cost to
+maintain expressions when there are mutator to be considered.
+
+The maintenance cost of an expression is calculated by changing the original
+expression with the mutator, taking the difference between the orignal and the
+changed expressions, and calculating the size of that difference. This also
+means that if there are no differences, the maintenance cost is zero.
 
 \subsection{Challenges}
 With the cost model being allowed to consider mutators as well as the query

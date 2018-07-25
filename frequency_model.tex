@@ -1,15 +1,5 @@
 \newcommand{\code}[1]{\texttt{#1}}
 
-\subsection{Overview}
-The frequency cost model uses the foundations of the maintenance cost model, but
-replaces the unprioritized ordering with a prioritized ordering of frequency
-cost, asymptotic runtime, max storage, true runtime, and true size.
-
-This model approaches optimization in a way that lets the user specify which
-query or mutator is more important than the other, and calculates the costs of
-expressions accordingly so that Cozy will find the implementation that is better
-tailored to how the user thinks the specification will be used.
-
 \subsection{The Problem}
 In both the original model and the maintenance cost model, there was no way for
 the user to specify the importance (or frequency of usage) of a query or a
@@ -38,4 +28,15 @@ query is used significantly more than the mutator. If we allow the user to
 specify this information, not only will Cozy have one less heuristic, it will
 also produce implementations that are more tailored to how they will be used.
 
+\subsection{Overview}
+The frequency cost model uses the foundations of the maintenance cost model, but
+replaces the unprioritized ordering with a prioritized ordering of frequency
+cost, asymptotic runtime, max storage, true runtime, and true size.
+
+This model approaches optimization in a way that lets the user specify which
+query or mutator is more important than the other, and calculates the costs of
+expressions accordingly so that Cozy will find the implementation that is better
+tailored to how the user thinks the specification will be used.
+
 \subsection{Challenge}
+
