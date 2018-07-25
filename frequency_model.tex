@@ -20,42 +20,38 @@ mutators. For example, this specification:
 \end{lstlisting}
 
 Can produce a state that is a list of all \code{(x, y)} tuples. This solution is
-inefficient for the mutator. When an \code{x} is added, the list of tuples will
-grow in size by the cardinality of the bag \code{ys}. In the original and the
-maintenance cost model, there is a heuristic in place to prevent Cozy from
-outputting this solution. However, this solution could be more efficient if the
-query is used significantly more than the mutator. If we allow the user to
+inefficient for the mutator but efficient for the query. When an \code{x} is
+added, the list of tuples will have to grow in size by the cardinality of the bag
+\code{ys}, which is problematic if \code{ys} gets really big. In the original
+and the maintenance cost model, there is a heuristic in place to prevent Cozy
+from outputting this solution. However, this solution is more efficient if
+the query is used significantly more than the mutator. If we allow the user to
 specify this information, not only will Cozy have one less heuristic, it will
 also produce implementations that are more tailored to how they will be used.
 
 \subsection{Overview}
-The frequency cost model uses the foundations of the maintenance cost model, but
-replaces the unprioritized ordering with a prioritized ordering of frequency
-cost, asymptotic runtime, max storage, true runtime, and true size.
-
-This model approaches optimization in a way that lets the user specify which
-query or mutator is more important than the other, and calculates the costs of
-expressions accordingly so that Cozy will find the implementation that is better
-tailored to how the user thinks the specification will be used.
+The frequency cost model uses part of the maintenance cost model but replaces
+the unprioritized ordering with a prioritized ordering of frequency cost,
+asymptotic runtime, max storage, true runtime, and size.
 
 The frequency cost of an expression is the weighted sum of its true runtime and
 its maintenance cost for every mutator that is available. The true runtime is
-considered to be the runtime of the query. The weights is the frequency of the
+considered to be the runtime of the query. The weights are the frequency of the
 query and mutators.
 
 \subsection{Challenges}
-There are a few noticeable challenges with this model. The first is, since this
-model is still trying to optimize multiple objectives, there might be an issue
-with just taking the weighted sum of runtime and maintenance costs. This could
-possibly produce confusing results in the future, especially for more
-complicated specifications.
+There are a few noticeable challenges with this model. The first is since this
+model is optimizing for multiple objectives, there might be an issue with just
+taking the weighted sum of runtime and maintenance costs. This could possibly
+produce confusing results in the future, especially for more complicated
+specifications.
 
 Moreover, since the model is using parts of the maintenance cost model, it is
-still slower than the original cost model. However, since it makes less solver
+also slower than the original cost model. However, since it makes fewer solver
 calls, it is slightly faster than the maintenance cost model.
 
-The most important issue to tackle is the scale of the frequencies. Currently,
-there are no specific guidelines for how to use the frequencies, or what numbers
+The final issue that this model faces is the scale of the frequencies. Currently,
+there are no specific guidelines on how to use the frequencies, or what numbers
 the frequencies should be. Manual testing on the example above shows that if the
 query has a frequency that is at least $\times 25$ the frequency of the mutator,
 Cozy will produce a different implementation. However, it is unclear if the
