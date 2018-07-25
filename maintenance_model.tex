@@ -31,10 +31,41 @@ of just the query, is very efficient. However, when the mutator \code{addCat} is
 called, the map of cats will have to be updated in two ways: (1) every existing
 cat with the same color as the new cat has to increment their count by 1, (2)
 the new cat will have to calculate the number of existing cats that match its
-color. When the number of cats is very large, it can lead to inefficiency. 
+color. When the number of cats is very large, it can lead to inefficiency.
 
 By allowing the cost model to also consider the maintenance cost of expressions
 with respect to available mutators, Cozy should be able determine that storing
 a map from colors to cats with the same colors is much more efficient overall.
 
-\subsection{Challenge and Solution}
+\subsection{Challenges}
+With the cost model being allowed to consider mutators as well as the query
+itself, optimizing towards multiple objectives became a problem. Initially, the
+model replaced max storage and true runtime with the sum of the maintenance
+costs of each mutator on an expression. Then, it compares the sums calculated
+from each expression with each other as the tie breaker for the asymptotic
+runtime in the prioritized ordering.
+
+The problem with this is for cases where there is more than one mutator, for
+each expression, there's a chance that it has a different maintenance cost
+depending on the mutator that was given to it.  This can lead to very confusing
+results, as we don't know which maintenance cost is more important, and summing
+them doesn't properly convey that information.
+
+To tackle this problem, we added an unprioritized ordering to the cost model.
+Opposite to the prioritized ordering, this ordering is used when we don't know
+which metric is more important than another. The unprioritized order compares
+the maintenance costs of two expressions for each op separately, then check the
+comparisons to make sure that they are consistent or ambiguous. This made the
+cost model much more consitent.
+
+However, with this addition, the cost model has become better at picking out
+ambiguity between two expressions. An example is for list storage, Cozy
+will be able to find examples where the maintenance cost an expression is
+different depending on what the is currently in the list and what mutator is
+being considered.
+
+Furthermore, because Cozy is comparing the maintenance costs of the expressions
+for each mutator separately, there is a significant increase in solver calls.
+This has made the maintenance cost model much slower than the original, thus
+preventing Cozy from finding some solutions that original could given the same
+amount of time.
