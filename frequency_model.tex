@@ -1,9 +1,9 @@
 \subsection{The Problem}
 In both the original model and the maintenance cost model, there was no way for
 the user to specify the importance (or frequency of usage) of a query or a
-mutator, this could be useful for specifications that could be implemented in
-several different ways, each way more efficient for different queries or
-mutators. For example, this specification:
+mutator. This could be useful for specifications that could be implemented in
+several different ways, with each way being more efficient for different queries
+or mutators. For example, this specification:
 
 \begin{lstlisting}
     Product:
@@ -53,5 +53,5 @@ there are no specific guidelines on how to use the frequencies, or what numbers
 the frequencies should be. Manual testing on the example above shows that if the
 query has a frequency that is at least $\times 25$ the frequency of the mutator,
 Cozy will produce a different implementation. However, it is unclear if the
-scale is the same for other specifications, especially those that more
+scale is the same for other specifications, especially those that more are
 complicated.

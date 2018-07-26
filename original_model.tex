@@ -1,7 +1,7 @@
 \subsection{The Problem}
 There are special heuristics that Cozy follows to prevent unwanted behaviours,
 one of which prevents Cozy from storing integer arithmetic as state variables.
-Once this heuristic is removed, Cozy will start producing unwanted state
+When this heuristic is removed, Cozy will start producing unwanted state
 variables. Specifically, when the heuristic is removed and Cozy is provided with
 this specification:
 
@@ -32,9 +32,9 @@ just \code{x} instead of its increments as states.
 
 \subsection{Overview}
 The original model uses prioritized ordering between values of expressions. The
-ordering tells the cost model which value it cares about: most to least. From
-first to last, the cost model will compare the asymptotic runtimes, the max
-storage sizes, the true runtimes, and the sizes of two expressions. The
+ordering tells the cost model which value it cares about, from most to least. In
+the order of first to last, the cost model will compare the asymptotic runtimes,
+the max storage sizes, the true runtimes, and the sizes of two expressions. The
 prioritized ordering ensures that values lower in the priority list will only be
 calculated to break ties from the more important ones.
 
